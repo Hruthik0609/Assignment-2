@@ -1,13 +1,17 @@
 def coinChange(coins, amount):
-    if amount == 0:
-        return 0
-    if amount < 0:
-        return float('inf')
+    dp = [float('inf')] * (amount + 1)  # Initialize DP array with large value
+    dp[0] = 0  # Base case: 0 coins needed for amount 0
 
-    return min(coinChange(coins, amount - coin) + 1 for coin in coins if amount >= coin)
+    for coin in coins:
+        for i in range(coin, amount + 1):
+            dp[i] = min(dp[i], dp[i - coin] + 1)
 
-# Example usage
-coins = [1, 2, 5]
-amount = 24
+    return -1 if dp[amount] == float('inf') else dp[amount]
+
+# Taking user input
+coins = list(map(int, input("Enter coin denominations (space-separated): ").split()))
+amount = int(input("Enter the amount: "))
+
+# Calling function and printing result
 result = coinChange(coins, amount)
-print(result if result != float('inf') else -1)  # Output: 3 (5+5+1)
+print(result)  # Prints the minimum number of coins or -1 if not possible
